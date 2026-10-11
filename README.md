@@ -99,8 +99,8 @@ a newer version the machine-learning packages may not install.
 
 ```bash
 .venv/bin/python -m pytest backend/tests -q    # 87 tests
-cd frontend && npm run build                   # checks and builds the website
-cd frontend && npm run lint                    # checks the code style
+cd frontend && npm run build && cd ..          # checks and builds the website
+cd frontend && npm run lint && cd ..           # checks the code style
 ```
 
 You should see **87 tests pass**, the build succeed, and the style check report
@@ -162,7 +162,8 @@ installed (see above).
 the value that gives the numbers in this README. A bigger number gives a much
 bigger sample and different results.
 
-Step 5 trains the model from scratch every time, so it's the slowest.
+All five steps take about a minute on a laptop. Step 5 trains the model from
+scratch every time you run it.
 
 ### 4. Start it
 

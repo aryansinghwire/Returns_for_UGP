@@ -12,7 +12,7 @@ There are two sets of Python packages. The server only needs the first:
 python3.12 -m venv .venv
 .venv/bin/python -m pip install -r backend/requirements.txt   # the server and its tests
 .venv/bin/python -m pip install -r requirements-ml.txt        # the machine-learning tools
-cd frontend && npm install
+cd frontend && npm install && cd ..
 ```
 
 Both files list exact versions, so everyone ends up with the same setup.
@@ -30,8 +30,8 @@ To change any settings, copy `.env.example` to `.env`. Git ignores `.env`, and
 ```bash
 .venv/bin/python -m pytest backend/tests -q                 # 87 tests, server packages only
 .venv/bin/python -m pytest backend/tests serving/tests -q   # 103 tests, needs both sets
-cd frontend && npm run build                                # checks and builds the website
-cd frontend && npm run lint                                 # checks the code style
+cd frontend && npm run build && cd ..                       # checks and builds the website
+cd frontend && npm run lint && cd ..                        # checks the code style
 ```
 
 **Everything is fine when you see 103 tests pass, the build succeed, and the
