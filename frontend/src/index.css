@@ -1,0 +1,233 @@
+@import "tailwindcss";
+
+/* ===========================================================================
+   Colours and text sizes.
+
+   In this app, colour means one thing: how likely an order is to be returned.
+   Everything else - lines, text, buttons, focus outlines, menus, links - is
+   black, white or grey, so the only colours on screen are the ones showing a
+   risk score. (There used to be eight accent colours, including a purple
+   "new product" label right next to the risk colours.)
+
+   Risk works like a traffic light: green, yellow, red. The colours change at
+   exactly the same scores as the words in lib/risk.ts (below 0.40, below
+   0.70, the rest), so the colour and the word next to it always agree.
+
+   Each level has two colours, because one colour can't do both jobs on a
+   light background:
+
+   - `--risk-N` is for SHAPES (chart bars, labels). It's chosen so the three
+     levels are easy to tell apart, including for colour-blind people. Every
+     pair passes a colour-blindness check: the smallest difference is 8.4 in
+     light mode and 9.0 in dark, above the minimum of 8.0. Green and red are
+     the pair colour-blind people most often confuse, so they also differ in
+     lightness (0.60 against 0.47), not just in colour.
+
+     The light-mode yellow has a contrast of only **2.28:1 against `--panel`**,
+     the background the chart is actually drawn on. (An older version of this
+     comment said 2.49 - that was measured against white, which isn't where
+     the bars are.) That's below the usual minimum of 3:1, and darkening it
+     doesn't help: each step darker makes it harder to tell apart from the
+     others, and a yellow dark enough to reach 3:1 is brown, which breaks the
+     traffic light. The accessibility guidelines allow an exception when the
+     information is also given another way, and here it is: the bars sit on a
+     labelled 0-1 scale, so their position shows the level; screen readers
+     skip the chart and hear a count instead; and every score in the table
+     below shows its level as a word.
+
+   - `--risk-N-text` is for TEXT, and is chosen to be easy to read. Every level
+     has a contrast of at least 4.5:1 against both `--paper` and `--panel`.
+     `--panel` is the harder one, because a row in the order list turns that
+     colour when you hover over it. An older version missed this and left the
+     yellow at 4.38:1 there.
+
+     Making all three that dark leaves green and yellow hard to tell apart for
+     colour-blind people (a difference of 2.8, below any minimum). That's
+     acceptable ONLY because colour isn't the only clue there: everywhere these
+     are used, the number and the word are shown too. Using them as the only
+     clue anywhere would be a bug.
+   =========================================================================== */
+
+:root {
+  color-scheme: light dark;
+
+  --paper: #ffffff;
+  --panel: #f4f5f6;
+  --rule: #dde0e3;
+  /* Dividing lines can be faint, but the edge of a box you type into can't
+     be. The accessibility guidelines (WCAG 1.4.11) ask for 3:1 contrast on the
+     edge that shows where a field is. --rule is only 1.33:1 - fine between
+     table rows, but invisible around an input. */
+  --rule-strong: #848d95;
+  --ink: #16191c;
+  --ink-muted: #5c656d;
+
+  --risk-0: #38964d;
+  --risk-1: #ce9d00;
+  --risk-2: #ac0311;
+
+  --risk-0-text: #007d2f;
+  --risk-1-text: #956700;
+  --risk-2-text: #a7000b;
+
+  /* An error isn't a risk score. It's the same colour as high risk, but has
+     its own name, so code that shows an error doesn't read as if it meant
+     "high risk" - and the two can be changed separately later. */
+  --alarm: #a7000b;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* A dark blue-grey rather than pure black. Bright colours seem to glow
+       against #000, and this is the background the risk colours were checked
+       against. */
+    --paper: #0f1316;
+    --panel: #171c20;
+    --rule: #262d33;
+    --rule-strong: #5f6a73;
+    --ink: #e7eaec;
+    --ink-muted: #8a949c;
+
+    --risk-0: #4bb160;
+    --risk-1: #e3b916;
+    --risk-2: #d33b36;
+
+    --risk-0-text: #59be6c;
+    --risk-1-text: #e9c025;
+    --risk-2-text: #ee554c;
+
+    --alarm: #ee554c;
+  }
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-panel: var(--panel);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+
+  --color-risk-0: var(--risk-0);
+  --color-risk-1: var(--risk-1);
+  --color-risk-2: var(--risk-2);
+
+  --color-risk-0-text: var(--risk-0-text);
+  --color-risk-1-text: var(--risk-1-text);
+  --color-risk-2-text: var(--risk-2-text);
+
+  --color-alarm: var(--alarm);
+
+  --font-sans: "Barlow", system-ui, sans-serif;
+  /* The narrow font lets column headings be normal, readable text, rather
+     than small, spaced-out capitals squeezed in to save room. */
+  --font-condensed: "Barlow Semi Condensed", "Barlow", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", monospace;
+
+  --text-meta: 0.6875rem;      /* 11px — column heads, metadata */
+  --text-meta--line-height: 1.3;
+  --text-body: 0.8125rem;      /* 13px — body, table cells */
+  --text-body--line-height: 1.45;
+  --text-head: 0.9375rem;      /* 15px — section headings, the score */
+  --text-head--line-height: 1.35;
+  --text-title: 1.25rem;       /* 20px — page title */
+  --text-title--line-height: 1.2;
+  --text-display: 1.75rem;     /* 28px — the score on order detail */
+  --text-display--line-height: 1;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  background: var(--paper);
+  color: var(--ink);
+  /* Removes the 300ms delay browsers add after each tap, in case it's a double-tap to zoom. */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Black or white, like everything that isn't about risk. If anything removes
+   the browser's usual focus outline, this puts one back. */
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+/* The two-handle slider (components/ScoreRangeSlider.tsx). Its two sliders
+   sit on top of each other, so each one's track must be invisible and let
+   clicks through. Only the handles may respond to the mouse, or the top
+   slider would catch every drag meant for the one underneath. */
+.range-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  pointer-events: none;
+  margin: 0;
+  /* Without this, dragging a handle on a touch screen scrolls the page instead. */
+  touch-action: none;
+}
+
+.range-thumb:focus {
+  outline: none;
+}
+
+.range-thumb::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  pointer-events: auto;
+  height: 0.9rem;
+  width: 0.9rem;
+  border-radius: 2px;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  cursor: grab;
+}
+
+.range-thumb::-moz-range-thumb {
+  pointer-events: auto;
+  height: 0.9rem;
+  width: 0.9rem;
+  border-radius: 2px;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  cursor: grab;
+}
+
+.range-thumb:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.range-thumb:focus-visible::-moz-range-thumb {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+/* While a handle is held, stop the drag from selecting the text around it. */
+.range-dragging {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* A safety net, not the main fix: lib/controls.ts sets a text colour on
+   every dropdown in the app. Tailwind's bg-* classes only set the background,
+   and a dropdown with a background but no text colour shows dark text on a
+   dark background in Windows dark mode. */
+select {
+  color: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

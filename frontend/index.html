@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <!-- Must match the page background in light and dark mode, or a phone's
+         browser shows a white bar around a dark page. -->
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0f1316" media="(prefers-color-scheme: dark)" />
+    <!-- The server is on the same address as the website, so the font hosts
+         are the only other sites the page connects to. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Barlow for most text, its narrower Semi Condensed version for column
+         headings and small details, and IBM Plex Mono for order and customer
+         codes. Staff read those codes aloud and type them elsewhere, so 0 and
+         O, or 1 and l, must never look alike. display=swap means a slow font
+         never leaves the order list blank. -->
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Semi+Condensed:wght@500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Semi+Condensed:wght@500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    />
+    <!-- This preloads the font stylesheet, not the font files themselves.
+         Google gives each browser different font file addresses, so they
+         can't be written in here. Preloading the files would mean serving
+         them from this website - a to-do in the project log, and what an
+         internal tool should do anyway. -->
+    <title>Returns Risk Engine — Ops Dashboard</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

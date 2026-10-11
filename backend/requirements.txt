@@ -1,0 +1,33 @@
+# Packages the server needs: the web framework, the database, and login.
+#
+# Exact versions, matching the setup the test results were recorded on. Before,
+# only the two login packages had fixed versions and the rest could be any
+# version - so "the tests pass" was only true on one computer, not on a setup
+# anyone could rebuild.
+#
+# The machine-learning packages are NOT here - see requirements-ml.txt in the
+# main project folder. The two files share only pytest.
+#
+#   python -m pip install -r backend/requirements.txt
+
+# --- web server --------------------------------------------------------------
+fastapi==0.141.1
+uvicorn[standard]==0.52.4
+
+# --- database and data checking ----------------------------------------------
+sqlalchemy==2.0.52
+pydantic==2.13.5
+
+# --- login -------------------------------------------------------------------
+# pyjwt rather than python-jose: pyjwt needs no other packages for this, and
+# python-jose has known security flaws (CVE-2024-33663 and 33664). bcrypt is
+# used directly rather than through passlib, which is no longer maintained
+# and breaks with bcrypt 4.1 or later (it reads bcrypt.__about__, which was
+# removed).
+pyjwt==2.15.1
+bcrypt==5.0.0
+
+# --- tests -------------------------------------------------------------------
+# The project never uses httpx itself, but the tests' TestClient needs it.
+pytest==9.1.1
+httpx==0.28.1

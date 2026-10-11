@@ -1,0 +1,43 @@
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Machine-learning outputs and the large data files (too big for git)
+data/
+catboost_info/
+graph/
+serving/output/
+
+# Mac system files
+.DS_Store
+
+# Website and server: installed packages, build output, database, logs
+node_modules/
+frontend/dist/
+backend/*.db
+.run-logs/
+
+# Secrets - the login signing key and any other private settings.
+# Must stay ignored: run_dev.sh loads .env if it exists.
+.env
+.env.*
+!.env.example
+
+# Not published. Context/ holds internal planning documents and summaries of
+# outside source material. archive/ holds work that was put aside: extra model
+# experiments, older write-ups, a one-off check, and early notes for an
+# India-focused version. Both stay on disk; they just aren't shared. A record
+# of what was left out, and which older commits still contain it, is kept
+# privately.
+#
+# The leading slash matches only these two folders at the top level. `data/`
+# above has no slash on purpose, so it also covers archive/data/.
+/Context/
+/archive/
+
+# Editor settings. They aren't part of the project, and a public repository
+# shouldn't hand readers someone else's setup. They stay on disk; they just
+# aren't shared.
+.vscode/

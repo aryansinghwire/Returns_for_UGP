@@ -1,0 +1,34 @@
+# Packages for the machine-learning steps: the scripts in the main project
+# folder, and serving/.
+#
+# Worked out from what clean_data.py, profile_data.py, build_features.py,
+# eval_harness.py, train_baselines.py, sample_subgraph.py, build_graph.py,
+# train_gnn.py and serving/ actually import, not from memory. Exact versions,
+# matching the setup the results were produced on, because the AUC scores in
+# the docs can only be reproduced with known versions.
+#
+# The server doesn't need any of these; see backend/requirements.txt. The two
+# files share only pytest, and each can be installed on its own.
+#
+#   python -m pip install -r requirements-ml.txt
+
+# --- number crunching --------------------------------------------------------
+numpy==2.5.2
+pandas==3.0.5
+
+# --- the graph model (GraphSAGE) ---------------------------------------------
+# torch-geometric works here without its optional add-ons, torch-scatter and
+# torch-sparse. build_graph.py and train_gnn.py do NOT need them.
+torch==2.13.0
+torch-geometric==2.8.0.post1
+
+# --- the four simpler models -------------------------------------------------
+# All four are needed to reproduce the comparison table. Dropping one changes
+# the comparison the whole project is built around.
+scikit-learn==1.9.0
+catboost==1.2.10
+lightgbm==4.7.0
+xgboost==3.4.1
+
+# --- tests -------------------------------------------------------------------
+pytest==9.1.1
